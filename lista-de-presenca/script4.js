@@ -116,12 +116,16 @@ class Lista_Encadeada{
             btn_Presente.style.width = "60px";
             btn_falta.style.height = "25px";
             btn_falta.style.width = "60px";
+            let contP = 0;
+            let contF = 0;
 
             btn_Presente.addEventListener("click",function(){
                 status.textContent = "P";
+                contP ++;
             })
             btn_falta.addEventListener("click",function(){
                 status.textContent = "F";
+                contF ++;
             })
 
             novaLinha.appendChild(id);
