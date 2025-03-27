@@ -26,8 +26,10 @@ document.addEventListener("DOMContentLoaded",function(){
    btn_salvar.addEventListener("click",function(){
     const nome = prompt("Digite um nome para a lista").value;
     let listas = salvaLista(lista,nome);
-    console.log(listas);
-    document.getElementById("showListas").appendChild(listas);
+    console.log(listas.header);
+    document.getElementById("showListas").innerText = (listas.header);
+    document.getElementById("tbody").innerHTML = "";
+    btn_salvar.style.display = "none";
 
    })
 
