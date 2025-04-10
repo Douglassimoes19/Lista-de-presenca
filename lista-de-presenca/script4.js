@@ -1,157 +1,156 @@
-document.addEventListener("DOMContentLoaded",function(){
-   const lista = new Lista_Encadeada();
-   const form = document.getElementById("novo_Aluno");
-   const btn_salvar = document.createElement("button");
-   btn_salvar.textContent = "Salvar";
+document.addEventListener("DOMContentLoaded", () => {
+    const lista = new ListaEncadeada();
 
-   form.addEventListener("submit",function(event){
-    event.preventDefault();
-    const nome = document.getElementById('nome').value;
-    if (nome.trim() === ""){
-        alert("digite um nome valido!");
-        return;
-    }
-    lista.append(nome);
-    
-    document.getElementById("nome").value = "";
-    document.innerHTML = lista.render();
-   })
+    const form = document.getElementById("form-novo-aluno");
+    const inputNome = document.getElementById("input-nome");
+    const tbody = document.getElementById("tbody");
+    const btnSalvar = document.getElementById("btn-salvar");
+    const btnRenderLista = document.getElementById("btn-render-lista");
+    const tituloLista = document.getElementById("titulo-lista");
+    const listaSalva = document.getElementById("lista-salva");
+    const tbodySalva = document.getElementById("tbody-salva");
 
-   form.addEventListener("submit", function(event){
-    event.preventDefault();
-    document.getElementById("btnSalva").appendChild(btn_salvar);
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const nome = inputNome.value.trim();
+      if (!nome) return alert("Digite um nome válido!");
 
-   })
+      lista.adicionar(nome);
+      lista.render(tbody);
 
-   btn_salvar.addEventListener("click",function(){
-    const nome = prompt("Digite um nome para a lista").value;
-    let listas = salvaLista(lista,nome);
-    console.log(listas.header);
-    document.getElementById("showListas").innerText = (listas.header);
-    document.getElementById("tbody").innerHTML = "";
-    btn_salvar.style.display = "none";
+      inputNome.value = "";
+      btnSalvar.classList.remove("d-none");
+      btnRenderLista.classList.remove("d-none");
+    });
 
-   })
+    btnSalvar.addEventListener("click", () => {
+      const nomeLista = prompt("Digite o nome da lista");
+      if (!nomeLista) return;
 
-})
+      lista.salvar(nomeLista);
 
-class Pessoa{
+      tituloLista.textContent = nomeLista;
+      listaSalva.classList.remove("d-none");
+      btnSalvar.classList.add("d-none");
+    });
 
+    btnRenderLista.addEventListener("click", () => {
+      lista.renderListaSalva(tbodySalva);
+      tbody.innerHTML = "";
+      btnRenderLista.classList.remove("d-block");
+    });
+  });
+
+  class Pessoa {
     static contador = 0;
 
-    constructor(nome){
-        this.id = ++Pessoa.contador;
-        this.nome = nome;
-        this.status = " ";
-        this.next = null;
-    }
-}
-
-class List{
-    static contador = 0;
-
-    constructor(lista,nome){
-        this.id = ++List.contador;
-        this.lista = lista;
-        this.nome = nome;
-        this.next = null;
-
-    }
-}
-
-class Lista_Encadeada{
-    constructor(){
-        this.head = null;
-        this.header = null;
+    constructor(nome) {
+      this.id = ++Pessoa.contador;
+      this.nome = nome;
+      this.status = null;
+      this.next = null;
     }
 
-    append(nome){
-        const pessoa = new Pessoa(nome);
-        if(!this.head){
-            this.head = pessoa;
-            return;
+    setStatus(status) {
+      this.status = status;
+    }
+  }
+
+  class ListaEncadeada {
+    constructor() {
+      this.head = null;
+      this.nomeLista = null;
+    }
+
+    adicionar(nome) {
+      const novaPessoa = new Pessoa(nome);
+      if (!this.head) {
+        this.head = novaPessoa;
+      } else {
+        let atual = this.head;
+        while (atual.next) {
+          atual = atual.next;
         }
-
-        let pessoa_atual = this.head;
-        while(pessoa_atual.next){
-            pessoa_atual = pessoa_atual.next;
-        }
-        pessoa_atual.next = pessoa;
+        atual.next = novaPessoa;
+      }
     }
 
-    listas(list, nome){
-        const lista = new List(list, nome);
-        if(!this.header){
-            this.header = lista;
-            return;
-        }
+    render(container) {
+      container.innerHTML = "";
+      let atual = this.head;
 
-        let lista_atual = this.header;
-        while(lista_atual.next){
-            lista_atual = lista_atual.next;
-        }
-        pessoa_atual.next = pessoa;
+      while (atual) {
+        const pessoa = atual;
+
+        const tr = document.createElement("tr");
+
+        const tdId = document.createElement("td");
+        tdId.textContent = pessoa.id;
+
+        const tdNome = document.createElement("td");
+        tdNome.textContent = pessoa.nome;
+
+        const tdStatus = document.createElement("td");
+        tdStatus.textContent = pessoa.status || "-";
+
+        const tdAcoes = document.createElement("td");
+        const btnPresente = document.createElement("button");
+        const btnFalta = document.createElement("button");
+
+        btnPresente.textContent = "Presente";
+        btnPresente.className = "btn btn-sm btn-success me-2";
+        btnFalta.textContent = "Falta";
+        btnFalta.className = "btn btn-sm btn-danger";
+
+        btnPresente.onclick = () => {
+          pessoa.setStatus("P");
+          this.render(container);
+        };
+
+        btnFalta.onclick = () => {
+          pessoa.setStatus("F");
+          this.render(container);
+        };
+
+        tdAcoes.appendChild(btnPresente);
+        tdAcoes.appendChild(btnFalta);
+
+        tr.appendChild(tdId);
+        tr.appendChild(tdNome);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdAcoes);
+
+        container.appendChild(tr);
+        atual = atual.next;
+      }
     }
 
-    render(){
-        const tBody = document.getElementById("tbody");
-
-        tBody.innerHTML = "";
-
-        let pessoa_atual = this.head;
-
-        while(pessoa_atual){
-            const novaLinha = document.createElement("tr");
-
-            const id = document.createElement("td");
-            id.textContent = pessoa_atual.id;
-            const nome = document.createElement("td");
-            nome.textContent = pessoa_atual.nome;
-            const status = document.createElement("td");
-            status.textContent = pessoa_atual.status;
-            const btn_falta = document.createElement("button");
-            btn_falta.textContent = "Falta";
-            const btn_Presente = document.createElement("button");
-            btn_Presente.textContent = "Presente"
-
-            btn_Presente.style.height = "25px";
-            btn_Presente.style.width = "60px";
-            btn_falta.style.height = "25px";
-            btn_falta.style.width = "60px";
-            let contP = 0;
-            let contF = 0;
-
-            btn_Presente.addEventListener("click",function(){
-                status.textContent = "P";
-                contP ++;
-            })
-            btn_falta.addEventListener("click",function(){
-                status.textContent = "F";
-                contF ++;
-            })
-
-            novaLinha.appendChild(id);
-            novaLinha.appendChild(nome);
-            novaLinha.appendChild(status);
-            novaLinha.appendChild(btn_falta);
-            novaLinha.appendChild(btn_Presente);
-
-
-            
-            
-            tBody.appendChild(novaLinha);
-            pessoa_atual = pessoa_atual.next;
-
-        }
-        
+    salvar(nome) {
+      this.nomeLista = nome;
     }
-}
 
-function salvaLista(lista,nome){
-    const listas = new Lista_Encadeada();
-    listas.listas(lista,nome);
+    renderListaSalva(container) {
+      container.innerHTML = "";
+      let atual = this.head;
 
-    return listas;
+      while (atual) {
+        const tr = document.createElement("tr");
 
+        const tdId = document.createElement("td");
+        tdId.textContent = atual.id;
 
-}
+        const tdNome = document.createElement("td");
+        tdNome.textContent = atual.nome;
+
+        const tdStatus = document.createElement("td");
+        tdStatus.textContent = atual.status || "-";
+
+        tr.appendChild(tdId);
+        tr.appendChild(tdNome);
+        tr.appendChild(tdStatus);
+
+        container.appendChild(tr);
+        atual = atual.next;
+      }
+    }
+  }
