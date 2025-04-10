@@ -1,34 +1,56 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>teste de js </title>
-<script src="script4.js" defer></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Presença</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="script4.js" defer></script>
 </head>
-<body>
-    <div id="turma1" >
-        <h1>Lista de presenças </h1>
-        <form action="" id="novo_Aluno">
-            <label for="nome">Adicionar alunos</label>
-            <input type="text" name="nome" id="nome" placeholder="Nome">
-            <button id="btn">Salvar</button>
-        </form> 
-        <table id="tabela">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>status</th>
-                </tr>
-            </thead>
-            <tbody id="tbody">
-                
-            </tbody>
-        </table>
-    </div>
-    <div id="btnSalva"></div>
-    <div id="showListas"></div>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow p-4">
+          <h1 class="text-center text-primary">Lista de Presença</h1>
     
+          <form id="form-novo-aluno" class="d-flex gap-2 mb-3">
+            <input type="text" id="input-nome" class="form-control" placeholder="Nome do Aluno" required>
+            <button type="submit" class="btn btn-success">Adicionar</button>
+          </form>
+    
+          <table class="table table-bordered">
+            <thead class="table-dark">
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Status</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="tbody"></tbody>
+          </table>
+    
+          <div class="text-center">
+            <button id="btn-salvar" class="btn btn-primary d-none mt-2">Salvar Lista</button>
+            <button id="btn-render-lista" class="btn btn-secondary d-none mt-2">Renderizar Lista Salva</button>
+          </div>
+        </div>
+    
+        <div id="lista-salva" class="mt-4 p-3 bg-white shadow rounded d-none">
+          <h2 id="titulo-lista" class="text-primary"></h2>
+          <table class="table table-bordered mt-3">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="tbody-salva"></tbody>
+          </table>
+        </div>
+      </div>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
